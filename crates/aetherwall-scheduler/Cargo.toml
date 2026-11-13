@@ -1,0 +1,19 @@
+[package]
+name = "aetherwall-scheduler"
+version = "0.1.0"
+authors = ["AetherWall Contributors"]
+edition = "2021"
+description = "AetherWall aetherwall-scheduler — a Linux-native wallpaper platform for KDE Plasma 6"
+license = "MIT"
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+anyhow = { workspace = true }
+tokio = { workspace = true }
+async-trait = { workspace = true }
+chrono = { workspace = true }
+uuid = { workspace = true }
+rusqlite = { workspace = true }
+walkdir = { workspace = true }

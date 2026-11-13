@@ -9,6 +9,40 @@ license = "MIT"
 [workspace.package]
 version = "0.1.0"
 
-# NOTE: This workspace is a scaffold for Phase 1 implementation.
-# Phase 0 (this repository) contains only documentation, design, and prototypes.
-# Cargo crates under crates/ are created and implemented in Phase 1.
+# ── Workspace members ────────────────────────────────────────────────────────
+members = [
+    "crates/aetherwall-core",
+    "crates/aetherwall-daemon",
+    "crates/aetherwall-ipc",
+    "crates/aetherwall-library",
+    "crates/aetherwall-scheduler",
+    "crates/aetherwall-settings",
+    "crates/aetherwall-package",
+    "crates/aetherwall-provider-api",
+    "crates/aetherwall-reliability",
+]
+
+# ── Workspace dependencies ──────────────────────────────────────────────────
+[workspace.dependencies]
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["fmt"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+clap = { version = "4", features = ["derive"] }
+rusqlite = { version = "0.32", features = ["bundled"] }
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "time"] }
+async-trait = "0.1"
+dbus = "0.9"
+dbus-client = "0.1"
+thiserror = "1"
+chrono = { version = "0.4", features = ["serde"] }
+uuid = { version = "1", features = ["v4", "serde"] }
+anyhow = "1"
+walkdir = "2"
+tempfile = "3"
+
+# ── Workspace lints ─────────────────────────────────────────────────────────
+[workspace.lints.clippy]
+all = "warn"
+nursery = "warn"
+perf = "warn"

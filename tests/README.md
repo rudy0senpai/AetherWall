@@ -1,70 +1,62 @@
-# Test Directory — AetherWall
+# Test Directory — AetherWall Phase 1
 
-The `tests/` directory holds test layers and test fixtures.
+The `tests/` directory holds test suites for the Phase 1 implementation.
 
 ## Structure
 
 | Directory | Purpose |
 |---|---|
-| `unit/` | Unit tests for crates (Phase 1) |
-| `integration/` | Cross-module integration tests (Phase 1) |
-| `contract/` | D-Bus request/response, runtime lifecycle, provider interface, package manifest compatibility |
-| `security/` | Archive path traversal, symlink extraction, ZIP bomb limits, malformed manifest, web permission enforcement, game resource limits, secrets |
-| `performance/` | Idle daemon resource usage, image library indexing at scale, video decode usage, web runtime memory, 3D frame pacing/GPU fallback, pause/resume latency, multi-monitor scaling |
+| `unit/` | Unit tests for Rust crates (core, library, scheduler) |
+| `integration/` | Cross-module tests (daemon + library + IPC) |
+| `contract/` | D-Bus request/response, runtime adapter interface |
+| `security/` | Path traversal, archive validation, package manifest |
+| `performance/` | Database performance, startup time, memory usage |
 
-## Future automated test layers (Phase 1+)
+## Test layers
 
 ### Unit tests
-- Manifest parsing and validation.
-- Path normalization and traversal rejection.
-- Playlist ordering and shuffle logic.
-- Settings serialization.
-- Provider response normalization.
-- Display geometry mapping.
-- Runtime state machine.
-
-### Contract tests
-- D-Bus request/response schemas.
-- Runtime adapter lifecycle.
-- Provider adapter interface.
-- Package manifest compatibility.
+- Manifest parsing and validation
+- Path normalization and traversal rejection
+- Playlist ordering and shuffle logic
+- Settings serialization
+- Display geometry mapping
+- Runtime state machine
 
 ### Integration tests
-- Import local image and video.
-- Create and restore playlist.
-- Apply wallpaper to selected display.
-- Restart daemon and reconcile sessions.
-- Runtime crash and recovery.
-- Provider offline/error behaviour.
-- Package install/uninstall.
-- Settings persistence.
+- Import local image
+- Create and restore playlist
+- Apply wallpaper to selected display
+- Restart daemon and reconcile sessions
+- Runtime crash and recovery
+- Settings persistence
 
-### UI tests
-- Navigation and focus order.
-- Import/download progress and cancellation.
-- Preview/apply separation.
-- Empty/loading/error states.
-- Display selection and responsive layout.
-- Accessibility labels.
+### Contract tests
+- D-Bus request/response schemas
+- Runtime adapter lifecycle (via mock runtime)
+- Provider adapter interface
+- Package manifest compatibility
 
 ### Security tests
-- Archive path traversal.
-- Symlink extraction.
-- ZIP bomb limits.
-- Malformed manifest and duplicate keys.
-- Web permission enforcement.
-- Network restrictions.
-- Game runtime resource limits.
-- Secrets not written to logs or plaintext settings.
+- Archive path traversal
+- Symlink extraction
+- ZIP bomb limits
+- Malformed manifest
+- Web permission enforcement
 
-### Performance tests
-- Idle daemon resource usage.
-- Image library indexing at increasing library sizes.
-- Video decode CPU/GPU usage.
-- Web runtime memory use.
-- 3D frame pacing and GPU fallback.
-- Pause/resume latency.
-- Multi-monitor scaling.
+## Run tests
+
+```bash
+# Run all workspace tests
+cargo test --workspace
+
+# Run a specific crate's tests
+cargo test -p aetherwall-core
+cargo test -p aetherwall-library
+cargo test -p aetherwall-daemon
+
+# Run a specific test
+cargo test -p aetherwall-core -- test_session_transitions
+```
 
 ## Manual test report template
 

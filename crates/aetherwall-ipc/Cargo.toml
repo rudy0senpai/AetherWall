@@ -1,0 +1,15 @@
+[package]
+name = "aetherwall-ipc"
+version = "0.1.0"
+authors = ["AetherWall Contributors"]
+edition = "2021"
+description = "AetherWall IPC crate — D-Bus interface between Studio and daemon"
+license = "MIT"
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+tokio = { workspace = true }
+dbus = { workspace = true }
+dbus-client = { workspace = true }

@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=AetherWall
+GenericName=Wallpaper Studio
+Comment=AetherWall — Linux-native wallpaper platform for KDE Plasma 6
+Exec=/usr/local/bin/aetherwall-studio
+Icon=aetherwall
+Terminal=false
+Categories=Graphics;Utility;
+Keywords=wallpaper;desktop;background;
+StartupNotify=true
