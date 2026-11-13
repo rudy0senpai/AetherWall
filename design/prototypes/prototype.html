@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AetherWall Phase 0 Prototypes</title>
+<style>
+  /* =====================================================================
+     AetherWall Phase 0 Prototype — design system tokens
+     Ref: design/design-system/tokens.css
+     ===================================================================== */
+  :root {
+    --aw-background: #0b0b10;
+    --aw-surface-1: #14131b;
+    --aw-surface-2: #1d1a27;
+    --aw-surface-3: #242034;
+    --aw-border: #343044;
+    --aw-border-strong: #4a435c;
+    --aw-divider: #2a2538;
+    --aw-primary: #8b3ddb;
+    --aw-primary-hover: #a855f7;
+    --aw-primary-soft: rgba(139, 61, 219, 0.18);
+    --aw-accent: #d946ef;
+    --aw-accent-soft: rgba(217, 70, 239, 0.18);
+    --aw-secondary-accent: #38bdf8;
+    --aw-text-primary: #f5f3fa;
+    --aw-text-secondary: #aaa5b8;
+    --aw-text-muted: #7a728a;
+    --aw-success: #34d399;
+    --aw-warning: #fbbf24;
+    --aw-error: #fb7185;
+    --aw-info: #60a5fa;
+    --aw-elevation-1: 0 1px 2px rgba(0,0,0,0.4), 0 0 0 1px var(--aw-divider);
+    --aw-elevation-2: 0 4px 12px rgba(0,0,0,0.45), 0 0 0 1px var(--aw-divider);
+    --aw-elevation-3: 0 8px 24px rgba(0,0,0,0.55), 0 0 0 1px var(--aw-border-strong);
+    --aw-gradient-primary: linear-gradient(135deg, #8b3ddb 0%, #a855f7 100%);
+    --aw-gradient-accent: linear-gradient(135deg, #d946ef 0%, #f472b6 100%);
+    --aw-gradient-hero: radial-gradient(ellipse 60% 50% at center, #1a1230 0%, #0b0b10 70%);
+    --aw-font-sans: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+    --aw-font-mono: "JetBrains Mono", "Fira Code", "Cascadia Code", monospace;
+    --aw-text-xs: 0.75rem;
+    --aw-text-sm: 0.8125rem;
+    --aw-text-base: 0.875rem;
+    --aw-text-lg: 1rem;
+    --aw-text-xl: 1.125rem;
+    --aw-text-2xl: 1.375rem;
+    --aw-text-3xl: 1.625rem;
+    --aw-text-4xl: 2.25rem;
+    --aw-leading-normal: 1.4;
+    --aw-leading-relaxed: 1.6;
+    --aw-space-1: 4px;
+    --aw-space-2: 8px;
+    --aw-space-3: 12px;
+    --aw-space-4: 16px;
+    --aw-space-6: 24px;
+    --aw-space-8: 32px;
+    --aw-space-10: 40px;
+    --aw-space-12: 48px;
+    --aw-radius-sm: 4px;
+    --aw-radius-md: 8px;
+    --aw-radius-lg: 12px;
+    --aw-radius-xl: 16px;
+    --aw-radius-full: 9999px;
+    --aw-z-drop: 20;
+    --aw-z-overlay: 30;
+    --aw-transition-fast: 120ms ease;
+    --aw-transition-base: 180ms ease;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: var(--aw-font-sans);
+    font-size: var(--aw-text-base);
+    line-height: var(--aw-leading-normal);
+    color: var(--aw-text-primary);
+    background: var(--aw-background);
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+  /* Scrollbar styling */
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: var(--aw-surface-1); }
+  ::-webkit-scrollbar-thumb { background: var(--aw-border-strong); border-radius: var(--aw-radius-sm); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--aw-primary); }
+
+  /* Layout */
+  #app { display: flex; flex-direction: column; height: 100%; }
+  .shell { display: flex; flex-direction: column; height: 100%; }
+
+  /* Desktop preview */
+  .preview {
+    background: var(--aw-gradient-hero);
+    border-bottom: 1px solid var(--aw-border);
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    padding: var(--aw-space-4);
+    gap: var(--aw-space-3);
+  }
+  .preview-label {
+    display: flex; align-items: center; gap: var(--aw-space-2);
+    font-size: var(--aw-text-sm); color: var(--aw-text-secondary);
+  }
+  .preview-label .badge {
+    background: rgba(255,255,255,0.08); color: var(--aw-text-secondary);
+    padding: 2px 8px; border-radius: var(--aw-radius-sm); font-size: var(--aw-text-xs);
+  }
+  .preview .display-selector {
+    background: var(--aw-surface-2); border: 1px solid var(--aw-border-strong);
+    color: var(--aw-text-primary); padding: var(--aw-space-2) var(--aw-space-3);
+    border-radius: var(--aw-radius-md); font-size: var(--aw-text-base);
+  }
+  .preview .size-ctrl {
+    display: flex; gap: var(--aw-space-2); align-items: center;
+  }
+  .preview .size-ctrl button {
+    background: var(--aw-surface-2); color: var(--aw-text-primary);
+    border: 1px solid var(--aw-border-strong); padding: var(--aw-space-1) var(--aw-space-3);
+    border-radius: var(--aw-radius-md); cursor: pointer; font-size: var(--aw-text-sm);
+  }
+  .preview .size-ctrl button:hover { background: var(--aw-surface-3); border-color: var(--aw-border); }
+  .preview .apply-row { display: flex; gap: var(--aw-space-2); }
+  .preview .apply-row button {
+    background: var(--aw-gradient-primary); color: #fff; border: none;
+    padding: var(--aw-space-2) var(--aw-space-4); border-radius: var(--aw-radius-md);
+    font-weight: 600; cursor: pointer; font-size: var(--aw-text-sm);
+  }
+  .preview .apply-row button:hover { filter: brightness(1.1); }
+  .preview .fallback-snapshot {
+    flex: 1; background: var(--aw-surface-3); border-radius: var(--aw-radius-lg);
+    display: flex; align-items: center; justify-content: center; min-height: 0;
+  }
+  .preview .fallback-snapshot .icon { font-size: 48px; color: var(--aw-text-muted); }
+
+  /* Studio area */
+  .studio {
+    flex: 1; display: flex; overflow: hidden;
+    background: var(--aw-surface-1);
+  }
+  .nav {
+    width: 154px; background: var(--aw-surface-1);
+    border-right: 1px solid var(--aw-border); display: flex; flex-direction: column;
+    padding: var(--aw-space-2) var(--aw-space-2); gap: var(--aw-space-1);
+    overflow-y: auto;
+  }
+  .nav-item {
+    display: flex; align-items: center; gap: var(--aw-space-3); padding: var(--aw-space-3) var(--aw-space-4);
+    color: var(--aw-text-secondary); border-radius: var(--aw-radius-md); cursor: pointer; font-size: var(--aw-text-sm);
+    transition: background var(--aw-transition-fast), color var(--aw-transition-fast);
+  }
+  .nav-item:hover { background: var(--aw-surface-2); color: var(--aw-text-primary); }
+  .nav-item.active { background: var(--aw-surface-2); color: var(--aw-primary); border-left: 3px solid var(--aw-primary); }
+  .nav-item .icon { font-size: 20px; width: 24px; text-align: center; }
+
+  /* Category chips */
+  .category-chips {
+    flex: 1; display: flex; flex-direction: column; gap: var(--aw-space-2); padding: var(--aw-space-2);
+    overflow: auto;
+  }
+  .chip {
+    display: flex; align-items: center; gap: var(--aw-space-3); padding: var(--aw-space-3) var(--aw-space-4);
+    background: var(--aw-surface-1); border: 1px solid var(--aw-border); border-radius: var(--aw-radius-md);
+    color: var(--aw-text-secondary); cursor: pointer; font-size: var(--aw-text-sm);
+    transition: all var(--aw-transition-fast);
+  }
+  .chip:hover { border-color: var(--aw-border-strong); color: var(--aw-text-primary); }
+  .chip .count { color: var(--aw-text-muted); font-size: var(--aw-text-xs); }
+
+  /* Main content area */
+  .main {
+    flex: 1; overflow: auto; padding: var(--aw-space-6);
+  }
+  .main-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: var(--aw-space-4);
+  }
+  .main-header h1 { font-size: var(--aw-text-2xl); font-weight: 600; }
+  .back-btn {
+    background: var(--aw-surface-2); color: var(--aw-text-primary); border: 1px solid var(--aw-border-strong);
+    padding: var(--aw-space-2) var(--aw-space-3); border-radius: var(--aw-radius-md); cursor: pointer; font-size: var(--aw-text-sm);
+  }
+  .back-btn:hover { border-color: var(--aw-border); }
+
+  /* Search */
+  .search-bar {
+    background: var(--aw-surface-2); border: 1px solid var(--aw-border-strong);
+    color: var(--aw-text-primary); padding: var(--aw-space-2) var(--aw-space-4);
+    border-radius: var(--aw-radius-md); font-size: var(--aw-text-base); width: 100%;
+  }
+  .search-bar:focus { outline: none; border-color: var(--aw-primary); }
+
+  /* Media grid */
+  .media-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: var(--aw-space-4);
+  }
+  .media-card {
+    background: var(--aw-surface-1); border: 1px solid var(--aw-border); border-radius: var(--aw-radius-lg);
+    overflow: hidden; cursor: pointer; transition: all var(--aw-transition-fast);
+  }
+  .media-card:hover { border-color: var(--aw-border-strong); box-shadow: var(--aw-elevation-2); }
+  .media-card .thumb {
+    height: 140px; background: var(--aw-surface-3); display: flex; align-items: center; justify-content: center;
+  }
+  .media-card .thumb .img { width: 100%; height: 100%; object-fit: cover; }
+  .media-card .meta { padding: var(--aw-space-3); }
+  .media-card .meta .title { font-weight: 600; font-size: var(--aw-text-base); margin-bottom: var(--aw-space-1); }
+  .media-card .meta .sub { font-size: var(--aw-text-xs); color: var(--aw-text-muted); }
+  .fav-btn {
+    position: absolute; top: var(--aw-space-2); right: var(--aw-space-2); background: rgba(0,0,0,0.5);
+    color: var(--aw-text-secondary); border: none; border-radius: var(--aw-radius-sm); padding: 4px 6px; cursor: pointer;
+  }
+  .fav-btn:hover { color: var(--aw-accent); }
+
+  /* Skeleton loading */
+  .skeleton {
+    background: linear-gradient(90deg, var(--aw-surface-3) 25%, var(--aw-surface-2) 50%, var(--aw-surface-3) 75%);
+    background-size: 200% 100%; animation: shimmer 1.2s infinite;
+  }
+  @keyframes shimmer { to { background-position: -200% 0; } }
+
+  /* Forms */
+  .form-group { margin-bottom: var(--aw-space-4); }
+  .form-group label { display: block; font-size: var(--aw-text-sm); color: var(--aw-text-secondary); margin-bottom: var(--aw-space-2); }
+  .form-group select, .form-group input, .form-group textarea {
+    width: 100%; background: var(--aw-surface-2); border: 1px solid var(--aw-border-strong);
+    color: var(--aw-text-primary); padding: var(--aw-space-2) var(--aw-space-3); border-radius: var(--aw-radius-md); font-size: var(--aw-text-base);
+  }
+  .form-group select:focus, .form-group input:focus, .form-group textarea:focus {
+    outline: none; border-color: var(--aw-primary);
+  }
+  .btn {
+    display: inline-flex; align-items: center; gap: var(--aw-space-2); padding: var(--aw-space-2) var(--aw-space-4);
+    border-radius: var(--aw-radius-md); cursor: pointer; font-size: var(--aw-text-base); font-weight: 600; border: none;
+    transition: all var(--aw-transition-fast); font-family: var(--aw-font-sans);
+  }
+  .btn-primary { background: var(--aw-gradient-primary); color: #fff; }
+  .btn-primary:hover { filter: brightness(1.1); }
+  .btn-ghost {
+    background: transparent; color: var(--aw-text-primary);
+    border: 1px solid var(--aw-border-strong);
+  }
+  .btn-ghost:hover { border-color: var(--aw-border); background: var(--aw-surface-2); }
+  .btn-accent { background: var(--aw-accent); color: #fff; }
+  .btn-accent:hover { filter: brightness(1.1); }
+  .btn-block { width: 100%; }
+  .btn-sm { padding: var(--aw-space-1) var(--aw-space-2); font-size: var(--aw-text-sm); }
+
+  /* Spinner */
+  .spinner {
+    width: 20px; height: 20px; border: 2px solid var(--aw-border); border-top-color: var(--aw-primary);
+    border-radius: 50%; animation: spin 0.8s linear infinite; display: inline-block;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* State boxes */
+  .state-box {
+    background: var(--aw-surface-2); border: 1px solid var(--aw-border-strong); border-radius: var(--aw-radius-lg);
+    padding: var(--aw-space-8); text-align: center;
+  }
+  .state-box .icon { font-size: 48px; color: var(--aw-text-muted); margin-bottom: var(--aw-space-3); }
+  .state-box .title { font-size: var(--aw-text-xl); font-weight: 600; margin-bottom: var(--aw-space-2); }
+  .state-box .desc { font-size: var(--aw-text-sm); color: var(--aw-text-secondary); }
+
+  /* Web editor */
+  .editor-grid { display: grid; grid-template-columns: 260px 1fr 1fr; gap: var(--aw-space-0); height: 100%; }
+  .editor-panel { background: var(--aw-surface-1); border: 1px solid var(--aw-border); border-radius: var(--aw-radius-lg); overflow: hidden; display: flex; flex-direction: column; }
+  .editor-panel-title {
+    padding: var(--aw-space-3); font-weight: 600; font-size: var(--aw-text-sm); color: var(--aw-text-secondary); border-bottom: 1px solid var(--aw-border);
+    display: flex; align-items: center; gap: var(--aw-space-2);
+  }
+  .editor-panel-body { flex: 1; overflow: auto; padding: var(--aw-space-4); font-family: var(--aw-font-mono); font-size: var(--aw-text-sm); }
+  .editor-panel-body editor, .editor-panel-body textarea { width: 100%; height: 100%; background: var(--aw-surface-2); color: var(--aw-text-primary); border: 1px solid var(--aw-border); border-radius: var(--aw-radius-md); padding: var(--aw-space-2); font-family: var(--aw-font-mono); font-size: var(--aw-text-sm); }
+  .editor-preview { background: var(--aw-surface-1); border: 1px solid var(--aw-border); border-radius: var(--aw-radius-lg); display: flex; align-items: center; justify-content: center; height: 100%; }
+  .editor-preview .demo {
+    width: 100%; height: 100%; background: var(--aw-gradient-hero); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: var(--aw-space-8);
+  }
+  .editor-preview .demo .mock {
+    width: 100%; max-width: 320px; padding: var(--aw-space-4);
+    background: var(--aw-surface-1); border: 1px solid var(--aw-border); border-radius: var(--aw-radius-lg); text-align: center;
+  }
+  .editor-preview .demo .mock h3 { color: var(--aw-text-primary); margin-bottom: var(--aw-space-2); }
+  .editor-preview .demo .mock p { color: var(--aw-text-secondary); font-size: var(--aw-text-sm); }
+
+  /* 3D editor */
+  .three-editor {
+    display: grid; grid-template-columns: 260px 1fr 260px; height: 100%; background: var(--aw-surface-1);
+  }
+  .three-editor .panel {
+    background: var(--aw-surface-1); border: 1px solid var(--aw-border); border-radius: var(--aw-radius-lg); overflow: hidden;
+  }
+  .three-editor .viewport {
+    background: var(--aw-surface-3); border: 1px solid var(--aw-border); border-radius: var(--aw-radius-lg); display: flex;
+    align-items: center; justify-content: center; position: relative; overflow: hidden;
+  }
+  .three-editor .viewport canvas { width: 100%; height: 100%; }
+  .three-editor .panel-title {
+    padding: var(--aw-space-3); font-weight: 600; font-size: var(--aw-text-sm); color: var(--aw-text-secondary); border-bottom: 1px solid var(--aw-border);
+  }
+  .three-editor .panel-body { padding: var(--aw-space-4); overflow: auto; }
+  .three-editor .panel-body h4 { font-size: var(--aw-text-sm); color: var(--aw-text-secondary); margin-bottom: var(--aw-space-3); margin-top: var(--aw-space-4); }
+  .three-editor .panel-body ul { list-style: none; }
+  .three-editor .panel-body li {
+    display: flex; justify-content: space-between; padding: var(--aw-space-2) 0;
+    border-bottom: 1px solid var(--aw-border); font-size: var(--aw-text-sm);
+  }
+  .three-editor .panel-body li:last-child { border-bottom: none; }
+
+  /* Slideshow */
+  .playlist {
+    display: flex; flex-direction: column; gap: var(--aw-space-2); max-width: 800px;
+  }
+  .playlist-item {
+    display: flex; align-items: center; gap: var(--aw-space-3); padding: var(--aw-space-3);
+    background: var(--aw-surface-1); border: 1px solid var(--aw-border); border-radius: var(--aw-radius-md);
+    cursor: pointer;
+  }
+  .playlist-item .thumb { width: 64px; height: 64px; background: var(--aw-surface-3); border-radius: var(--aw-radius-md); flex-shrink: 0; }
+  .playlist-item .info { flex: 1; }
+  .playlist-item .info .title { font-weight: 600; font-size: var(--aw-text-sm); }
+  .playlist-item .info .meta { font-size: var(--aw-text-xs); color: var(--aw-text-muted); }
+  .drag-handle { color: var(--aw-text-muted); cursor: grabber; font-size: 18px; }
+
+  /* Games */
+  .game-card {
+    background: var(--aw-surface-1); border: 1px solid var(--aw-border); border-radius: var(--aw-radius-lg);
+    overflow: hidden; cursor: pointer; transition: all var(--aw-transition-fast);
+  }
+  .game-card:hover { border-color: var(--aw-border-strong); box-shadow: var(--aw-elevation-2); }
+  .game-card .thumb { height: 140px; background: var(--aw-surface-3); display: flex; align-items: center; justify-content: center; }
+  .game-card .info { padding: var(--aw-space-4); }
+  .game-card .info .title { font-weight: 600; font-size: var(--aw-text-base); }
+  .game-card .info .desc { font-size: var(--aw-text-sm); color: var(--aw-text-secondary); margin-top: var(--aw-space-1); }
+  .game-card .info .meta { display: flex; gap: var(--aw-space-3); margin-top: var(--aw-space-3); font-size: var(--aw-text-xs); color: var(--aw-text-muted); }
+
+  /* Downloads */
+  .download-item {
+    display: flex; align-items: center; gap: var(--aw-space-4); padding: var(--aw-space-4);
+    background: var(--aw-surface-1); border: 1px solid var(--aw-border); border-radius: var(--aw-radius-md); margin-bottom: var(--aw-space-2);
+  }
+  .download-item .info { flex: 1; }
+  .download-item .info .title { font-weight: 600; font-size: var(--aw-text-base); }
+  .download-item .info .meta { font-size: var(--aw-text-xs); color: var(--aw-text-muted); }
+  .download-item .progress { flex: 2; }
+  .download-item .progress .bar { height: 6px; background: var(--aw-surface-3); border-radius: var(--aw-radius-sm); overflow: hidden; }
+  .download-item .progress .bar > div { height: 100%; background: var(--aw-primary); border-radius: var(--aw-radius-sm); transition: width 0.3s; }
+
+  /* Diagnostics log */
+  .log-viewer {
+    background: var(--aw-surface-2); border: 1px solid var(--aw-border-strong); border-radius: var(--aw-radius-lg);
+    height: 200px; overflow: auto; padding: var(--aw-space-4); font-family: var(--aw-font-mono); font-size: var(--aw-text-xs);
+  }
+  .log-viewer .line { padding: 2px 0; color: var(--aw-text-secondary); border-bottom: 1px solid var(--aw-divider); }
+  .log-viewer .line.error { color: var(--aw-error); }
+
+  /* Settings */
+  .settings-group {
+    background: var(--aw-surface-1); border: 1px solid var(--aw-border); border-radius: var(--aw-radius-lg);
+    padding: var(--aw-space-4); margin-bottom: var(--aw-space-3);
+  }
+  .settings-group h3 {
+    font-size: var(--aw-text-lg); font-weight: 600; margin-bottom: var(--aw-space-3); padding-bottom: var(--aw-space-3);
+    border-bottom: 1px solid var(--aw-border); color: var(--aw-text-primary);
+  }
+  .settings-group .item {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: var(--aw-space-2) 0; border-bottom: 1px solid var(--aw-border); font-size: var(--aw-text-sm);
+  }
+  .settings-group .item:last-child { border-bottom: none; }
+  .settings-group .item .label { color: var(--aw-text-secondary); }
+  .settings-group .item .value { color: var(--aw-text-primary); }
+
+  /* Override for demo purposes */
+  .demo-overlay { position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; color: var(--aw-text-primary); }
+  .demo-overlay .box { background: var(--aw-surface-1); padding: var(--aw-space-8); border-radius: var(--aw-radius-xl); border: 1px solid var(--aw-border-strong); }
+  .demo-overlay .box h2 { margin-bottom: var(--aw-space-4); }
+  .demo-overlay .box p { color: var(--aw-text-secondary); margin-bottom: var(--aw-space-4); }
+  .demo-overlay .box button { padding: var(--aw-space-2) var(--aw-space-6); }
+
+  @media (max-width: 1100px) {
+    .editor-grid, .three-editor { grid-template-columns: 1fr; grid-template-rows: auto 1fr auto; }
+    .nav { width: 64px; }
+    .nav-item span { display: none; }
+    .nav-item { justify-content: center; padding: var(--aw-space-3); }
+    .nav-item .icon { width: auto; }
+    .category-chips { flex-direction: row; flex-wrap: wrap; }
+    .chip { flex: 1; min-width: calc(33.333% - var(--aw-space-2)); }
+  }
+  @media (max-width: 768px) {
+    .studio { flex-direction: column; }
+    .nav { position: fixed; top: 0; left: 0; height: 100%; z-index: 100; }
+    .main { padding: var(--aw-space-4); }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="shell">
+    <div class="preview">
+      <div class="preview-label">
+        <span class="badge">Desktop preview</span>
+        <span style="margin-left:auto;">Display: <select class="display-selector"><option>Primary Display (1920×1080)</option><option>Aux Display (1920×1200)</option></select></span>
+      </div>
+      <div class="fallback-snapshot">
+        <div class="icon">🖼️</div>
+        <div style="color:var(--aw-text-secondary);font-size:var(--aw-text-sm);">Preview snapshot — not a live wallpaper</div>
+      </div>
+      <div class="apply-row">
+        <button>Apply to Display</button>
+        <div class="size-ctrl">
+          <button>A</button>
+          <button>B</button>
+          <button>S</button>
+        </div>
+      </div>
+    </div>
+    <div class="studio">
+      <nav class="nav" id="nav">
+        <div class="nav-item active" data-screen="home"><span class="icon">🏠</span><span>Home</span></div>
+        <div class="nav-item" data-screen="library"><span class="icon">📚</span><span>Library</span></div>
+        <div class="nav-item" data-screen="workshop"><span class="icon">⚙️</span><span>Workshop</span></div>
+        <div class="nav-item" data-screen="favorites"><span class="icon">★</span><span>Favorites</span></div>
+        <div class="nav-item" data-screen="downloads"><span class="icon">⬇️</span><span>Downloads</span></div>
+        <div class="nav-item" data-screen="displays"><span class="icon">🖥️</span><span>Displays</span></div>
+        <div class="nav-item" data-screen="settings"><span class="icon">⚙️</span><span>Settings</span></div>
+        <div class="nav-item" data-screen="diagnostics"><span class="icon">🔍</span><span>Diagnostics</span></div>
+      </nav>
+      <div class="category-chips" id="categoryChips">
+        <div class="chip">📷 Pictures <span class="count">24</span></div>
+        <div class="chip">🎞️ Slideshow <span class="count">3</span></div>
+        <div class="chip">🎬 Videos <span class="count">12</span></div>
+        <div class="chip">🌐 Web <span class="count">8</span></div>
+        <div class="chip">📺 Anime Pics <span class="count">56</span></div>
+        <div class="chip">🎥 Anime Vids <span class="count">21</span></div>
+        <div class="chip">🧊 3D <span class="count">14</span></div>
+        <div class="chip">🎮 Games <span class="count">9</span></div>
+      </div>
+      <main class="main" id="main">
+        <!-- Screens rendered by JS -->
+      </main>
+    </div>
+  </div>
+</div>
+
+<script>
+const screens = {
+  home: `<div class="main-header"><div><h1>Home</h1><span style="font-size:var(--aw-text-sm);color:var(--aw-text-muted);">Welcome back</span></div><button class="btn btn-ghost">Search wallpapers</button></div>
+  <div class="state-box" style="margin-top:var(--aw-space-6);">
+    <div class="icon">🖼️</div>
+    <div class="title">Featured wallpaper</div>
+    <div style="font-size:var(--aw-text-lg);margin-bottom:var(--aw-space-4);">Neon Nebula Drift</div>
+    <button class="btn btn-primary btn-block">View details →</button>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:var(--aw-space-4);margin-top:var(--aw-space-6);">
+    <div class="media-card"><div class="thumb" style="background:#2a1a4a;"></div><div class="meta"><div class="title">Pictures</div><div class="sub">42 items</div></div></div>
+    <div class="media-card"><div class="thumb" style="background:#1a4a2a;"></div><div class="meta"><div class="title">Slideshow</div><div class="sub">3 items</div></div></div>
+    <div class="media-card"><div class="thumb" style="background:#4a2a1a;"></div><div class="meta"><div class="title">Videos</div><div class="sub">12 items</div></div></div>
+    <div class="media-card"><div class="thumb" style="background:#1a2a4a;"></div><div class="meta"><div class="title">Web Wallpapers</div><div class="sub">8 items</div></div></div>
+    <div class="media-card"><div class="thumb" style="background:#4a2a3a;"></div><div class="meta"><div class="title">Anime Pictures</div><div class="sub">56 items</div></div></div>
+    <div class="media-card"><div class="thumb" style="background:#2a3a1a;"></div><div class="meta"><div class="title">Anime Videos</div><div class="sub">21 items</div></div></div>
+    <div class="media-card"><div class="thumb" style="background:#3a1a2a;"></div><div class="meta"><div class="title">3D Wallpapers</div><div class="sub">14 items</div></div></div>
+    <div class="media-card"><div class="thumb" style="background:#1a2a3a;"></div><div class="meta"><div class="title">Games</div><div class="sub">9 items</div></div></div>
+  </div>`,
+  library: `<div class="main-header"><div><h1>Library</h1></div><div style="display:flex;gap:var(--aw-space-3);"><button class="btn btn-ghost">Import folder</button><div style="position:relative;"><input class="search-bar" placeholder="Search library..."></div></div></div>
+  <div style="display:flex;gap:var(--aw-space-2);flex-wrap:wrap;margin-bottom:var(--aw-space-4);">
+    <button class="btn btn-ghost btn-sm">📷 Pictures</button>
+    <button class="btn btn-ghost btn-sm">🎞️ Slideshow</button>
+    <button class="btn btn-ghost btn-sm">🎬 Videos</button>
+    <button class="btn btn-ghost btn-sm">🌐 Web</button>
+    <button class="btn btn-ghost btn-sm">📺 Anime Pics</button>
+    <button class="btn btn-ghost btn-sm">🎥 Anime Vids</button>
+    <button class="btn btn-ghost btn-sm">🧊 3D</button>
+    <button class="btn btn-ghost btn-sm">🎮 Games</button>
+  </div>
+  <div class="media-grid" id="libraryGrid">
+    ${Array.from({length:12}).map((_,i)=>`
+      <div class="media-card"><div class="thumb" style="background:${['#2a1a4a','#1a4a2a','#4a2a1a','#1a2a4a','#4a2a3a','#2a3a1a','#3a1a2a','#1a2a3a','#2a4a1a','#4a1a3a','#3a2a1a','#1a3a2a'][i]};></div><div class="meta"><div class="title">${['Nebula Drift','Autumn Leaves','City Rooftops','Abstract Waves','Anime Scene 1','Anime Scene 2','Anime Scene 3','Web Art','3D Scene','Game Title','Portrait','Landscape'][i]}</div><div class="sub">4032×3024 · 2.1 MB</div></div></div>`).join('')}
+  </div>`,
+  workshop: `<div class="main-header"><div><h1>Workshop</h1><span style="font-size:var(--aw-text-sm);color:var(--aw-text-muted);">Discover & create</span></div><div style="display:flex;gap:var(--aw-space-3);"><input class="search-bar" placeholder="Search providers..."></div></div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:var(--aw-space-4);margin-top:var(--aw-space-6);">
+    <div class="state-box" style="grid-column:span 2;">
+      <div class="icon">🔍</div>
+      <div class="title">Provider discovery</div>
+      <div style="font-size:var(--aw-text-sm);color:var(--aw-text-secondary);">Browse anime picture providers, web wallpaper catalogs, and more.</div>
+      <div style="display:flex;gap:var(--aw-space-3);margin-top:var(--aw-space-4);">
+        <button class="btn btn-primary btn-sm">Browse providers</button>
+        <button class="btn btn-ghost btn-sm">Import .awall</button>
+      </div>
+    </div>
+    <div class="media-card"><div class="thumb" style="background:#2a1a4a;"></div><div class="meta"><div class="title">Anime Land</div><div class="sub">Provider · online</div><div class="sub" style="margin-top:var(--aw-space-1);">1,250 items</div></div></div>
+    <div class="media-card"><div class="thumb" style="background:#1a4a2a;"></div><div class="meta"><div class="title">LoveLive!</div><div class="sub">Provider · online</div><div class="sub" style="margin-top:var(--aw-space-1);">842 items</div></div></div>
+    <div class="media-card"><div class="thumb" style="background:#4a2a1a;"></div><div class="meta"><div class="title">Studio Ghibli</div><div class="sub">Catalog · online</div><div class="sub" style="margin-top:var(--aw-space-1);">310 items</div></div></div>
+  </div>`,
+  favorites: `<div class="main-header"><div><h1>Favorites</h1><span style="font-size:var(--aw-text-sm);color:var(--aw-text-muted);">★ your selections</span></div></div>
+  <div class="state-box" style="margin-top:var(--aw-space-6);">
+    <div class="icon">★</div>
+    <div class="title">No favorites yet</div>
+    <div style="font-size:var(--aw-text-sm);color:var(--aw-text-secondary);">Tap the heart on any wallpaper to save it here.</div>
+    <button class="btn btn-primary btn-block">Discover wallpapers</button>
+  </div>`,
+  downloads: `<div class="main-header"><div><h1>Downloads</h1></div></div>
+  <div class="state-box" style="margin-top:var(--aw-space-6);">
+    <div class="icon">⬇️</div>
+    <div class="title">No downloads yet</div>
+    <div style="font-size:var(--aw-text-sm);color:var(--aw-text-secondary);">Import or discover wallpapers and they'll appear here.</div>
+    <button class="btn btn-primary btn-block">Browse downloads</button>
+  </div>`,
+  displays: `<div class="main-header"><div><h1>Displays</h1></div><div style="display:flex;gap:var(--aw-space-3);"><button class="btn btn-ghost">🔄 Refresh topology</button><button class="btn btn-ghost">+ Add display</button></div></div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:var(--aw-space-4);margin-top:var(--aw-space-6);">
+    <div class="state-box">
+      <div class="icon">🖥️</div>
+      <div class="title">Primary Display (1920×1080)</div>
+      <div style="font-size:var(--aw-text-sm);color:var(--aw-text-secondary);">HDMI 1 · scale 100% · 60 Hz</div>
+      <div style="display:flex;gap:var(--aw-space-3);margin-top:var(--aw-space-4);">
+        <span style="background:var(--aw-primary-soft);color:var(--aw-primary);padding:var(--aw-space-1) var(--aw-space-3);border-radius:var(--aw-radius-sm);">Primary</span>
+        <button class="btn btn-ghost btn-sm">Set as primary</button>
+      </div>
+    </div>
+    <div class="state-box">
+      <div class="icon">🖥️</div>
+      <div class="title">Aux Display (1920×1200)</div>
+      <div style="font-size:var(--aw-text-sm);color:var(--aw-text-secondary);">HDMI 2 · scale 125% · 60 Hz</div>
+      <div style="display:flex;gap:var(--aw-space-3);margin-top:var(--aw-space-4);">
+        <span style="background:var(--aw-surface-3);color:var(--aw-text-muted);padding:var(--aw-space-1) var(--aw-space-3);border-radius:var(--aw-radius-sm);">Aux</span>
+      </div>
+    </div>
+  </div>`,
+  settings: `<div class="main-header"><div><h1>Settings</h1></div></div>
+  <div style="max-width:640px;">
+    <div class="settings-group">
+      <h3>Appearance</h3>
+      <div class="item"><span class="label">Theme</span><span class="value">Dark</span></div>
+      <div class="item"><span class="label">Accent color</span><span class="value">Purple</span></div>
+      <div class="item"><span class="label">Font size</span><span class="value">Default</span></div>
+    </div>
+    <div class="settings-group">
+      <h3>Interface</h3>
+      <div class="item"><span class="label">Compact mode</span><span class="value">Off</span></div>
+      <div class="item"><span class="label">Keyboard shortcuts</span><span class="value">Help</span></div>
+    </div>
+    <div class="settings-group">
+      <h3>Library</h3>
+      <div class="item"><span class="label">Import folder</span><span class="value">Pictures/AetherWall</span></div>
+      <div class="item"><span class="label">Default thumbnail size</span><span class="value">Medium</span></div>
+    </div>
+    <div class="settings-group">
+      <h3>Providers</h3>
+      <div class="item"><span class="label">Anime pictures</span><span class="value" style="color:var(--aw-text-secondary);">Enabled</span></div>
+      <div class="item"><span class="label">Anime videos</span><span class="value" style="color:var(--aw-text-secondary);">Disabled</span></div>
+    </div>
+    <div class="settings-group">
+      <h3>Storage</h3>
+      <div class="item"><span class="label">Cache size</span><span class="value">2.4 GB</span></div>
+    </div>
+  </div>`,
+  diagnostics: `<div class="main-header"><div><h1>Diagnostics</h1><span style="font-size:var(--aw-text-sm);color:var(--aw-text-muted);">Logs & runtime status</span></div></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--aw-space-4);max-width:1000px;margin-top:var(--aw-space-6);">
+    <div class="state-box">
+      <div class="title">Log viewer</div>
+      <div class="log-viewer">
+        <div class="line">[INFO] 13:45:22 — Studio connected to daemon</div>
+        <div class="line">[INFO] 13:45:22 — Window: 1440×900</div>
+        <div class="line">[INFO] 13:45:23 — Display topology detected: 2 displays</div>
+        <div class="line">[INFO] 13:46:01 — Library scan complete: 119 items</div>
+        <div class="line error">[WARN] 13:47:15 — Web runtime crashed, session recovered</div>
+        <div class="line">[INFO] 13:47:15 — Runtime restarted successfully</div>
+        <div class="line">[INFO] 13:48:00 — Daemon heartbeat: OK</div>
+      </div>
+      <div style="display:flex;gap:var(--aw-space-3);margin-top:var(--aw-space-3);">
+        <button class="btn btn-ghost btn-sm">Clear log</button>
+        <button class="btn btn-ghost btn-sm">Export</button>
+      </div>
+    </div>
+    <div style="display:grid;gap:var(--aw-space-3);">
+      <div class="state-box">
+        <div class="title">Runtime status</div>
+        <div style="font-size:var(--aw-text-sm);color:var(--aw-text-secondary);margin-bottom:var(--aw-space-2);">Image/Slideshow</div>
+        <div class="progress"><div class="bar"><div style="width:100%;background:var(--aw-success);"></div></div></div>
+      </div>
+      <div class="state-box">
+        <div class="title">Runtime status</div>
+        <div style="font-size:var(--aw-text-sm);color:var(--aw-text-secondary);margin-bottom:var(--aw-space-2);">libmpv video</div>
+        <div class="progress"><div class="bar"><div style="width:100%;background:var(--aw-success);"></div></div></div>
+      </div>
+      <div class="state-box">
+        <div class="title">Runtime status</div>
+        <div style="font-size:var(--aw-text-sm);color:var(--aw-text-secondary);margin-bottom:var(--aw-space-2);">Qt WebEngine</div>
+        <div class="progress"><div class="bar"><div style="width:0%;"></div></div></div>
+      </div>
+      <div class="state-box">
+        <div class="title">Runtime status</div>
+        <div style="font-size:var(--aw-text-sm);color:var(--aw-text-secondary);margin-bottom:var(--aw-space-2);">Game HTML5</div>
+        <div class="progress"><div class="bar"><div style="width:100%;background:var(--aw-error);"></div></div></div>
+      </div>
+    </div>
+  </div>`,
+  details: `<div class="main-header"><button class="back-btn">← Back</button><div style="flex:1;text-align:right;"><span style="font-size:var(--aw-text-sm);color:var(--aw-text-muted);">Originally by Anime Land</span></div></div>
+  <div style="display:grid;grid-template-columns:1fr 280px;height:100%;gap:var(--aw-space-0);">
+    <div style="background:var(--aw-gradient-hero);border-radius:16px;display:flex;align-items:center;justify-content:center;padding:var(--aw-space-8);min-height:200px;">
+      <div style="color:var(--aw-text-secondary);font-size:var(--aw-text-xl);">🖼️</div>
+      <div style="color:var(--aw-text-secondary);font-size:var(--aw-text-sm);">Preview snapshot</div>
+    </div>
+    <div style="padding:var(--aw-space-6);display:flex;flex-direction:column;gap:var(--aw-space-3);">
+      <h3>Nebula Drift</h3>
+      <p style="color:var(--aw-text-secondary);">A slowly animated nebula scene.</p>
+      <div style="display:flex;gap:var(--aw-space-3);font-size:var(--aw-text-sm);color:var(--aw-text-muted);">
+        <span>⭐ 4.5 (214)</span>
+        <span>🖼️ 1920×1080</span>
+        <span>📅 2026-11-01</span>
+        <span>📦 2.1 MB</span>
+      </div>
+      <div style="display:flex;gap:var(--aw-space-3);flex-wrap:wrap;">
+        <button class="btn btn-primary">Apply to Display</button>
+        <button class="btn btn-ghost">Customize</button>
+        <button class="btn btn-ghost">Favorite</button>
+        <button class="btn btn-ghost">Remove</button>
+        <button class="btn btn-ghost">Source</button>
+      </div>
+    </div>
+  </div>`,
+  pictures: `<div class="main-header"><div><h1>Pictures</h1><span style="font-size:var(--aw-text-sm);color:var(--aw-text-muted);">24 items</span></div><div style="display:flex;gap:var(--aw-space-3);"><button class="btn btn-ghost btn-sm">Import folder</button><div style="position:relative;"><input class="search-bar" placeholder="Search pictures..."></div></div></div>
+  <div class="media-grid">
+    ${Array.from({length:12}).map((_,i)=>`
+      <div class="media-card"><div class="thumb" style="background:${['#2a1a4a','#1a4a2a','#4a2a1a','#1a2a4a','#4a2a3a','#2a3a1a','#3a1a2a','#1a2a3a','#2a4a1a','#4a1a3a','#3a2a1a','#1a3a2a'][i]};></div><div class="meta"><div class="title">${['Nebula Drift','Autumn Leaves','City Rooftops','Abstract Waves','Anime Scene 1','Anime Scene 2','Anime Scene 3','Web Art','3D Scene','Game Title','Portrait','Landscape'][i]}</div><div class="sub">4032×3024 · 2.1 MB</div></div></div>`).join('')}
+  </div>`,
+  slideshow: `<div class="main-header"><div><h1>Slideshow</h1></div></div>
+  <div style="max-width:800px;">
+    <div style="margin-bottom:var(--aw-space-4);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--aw-space-3);">
+        <h3 style="font-size:var(--aw-text-lg);">Playlist</h3>
+        <button class="btn btn-ghost btn-sm">Import folder</button>
+      </div>
+      <div class="playlist">
+        <div class="playlist-item"><div class="thumb" style="background:#2a1a4a;"></div><div class="info"><div class="title">Nebula Drift</div><div class="meta">4032×3024 · 2.1 MB</div></div><div class="drag-handle">⠿</div></div>
+        <div class="playlist-item"><div class="thumb" style="background:#1a4a2a;"></div><div class="info"><div class="title">Autumn Leaves</div><div class="meta">3840×2400 · 1.8 MB</div></div><div class="drag-handle">⠿</div></div>
+        <div class="playlist-item"><div class="thumb" style="background:#4a2a1a;"></div><div class="info"><div class="title">City Rooftops</div><div class="meta">4032×3024 · 2.4 MB</div></div><div class="drag-handle">⠿</div></div>
+        <div class="playlist-item"><div class="thumb" style="background:#1a2a4a;"></div><div class="info"><div class="title">Abstract Waves</div><div class="meta">3024×4032 · 1.9 MB</div></div><div class="drag-handle">⠿</div></div>
+      </div>
+      <div style="display:flex;gap:var(--aw-space-3);margin-top:var(--aw-space-4);">
+        <button class="btn btn-ghost">🔀 Shuffle</button>
+        <button class="btn btn-ghost">⟳ Reorder</button>
+        <button class="btn btn-ghost">✕ Clear</button>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:var(--aw-space-3);">
+      <div class="state-box"><div class="icon">⏱️</div><div class="title">Interval</div><div style="font-size:var(--aw-text-sm);color:var(--aw-text-secondary);">5000 ms</div></div>
+      <div class="state-box"><div class="icon">➡️</div><div class="title">Transition</div><div style="font-size:var(--aw-text-sm);color:var(--aw-text-secondary);">Crossfade 800 ms</div></div>
+      <div class="state-box"><div class="icon">🔀</div><div class="title">Mode</div><div style="font-size:var(--aw-text-sm);color:var(--aw-text-secondary);">Sequential</div></div>
+      <div class="state-box"><div class="icon">📺</div><div class="title">Display</div><div style="font-size:var(--aw-text-sm);color:var(--aw-text-secondary);">Primary</div></div>
+    </div>
+    <div style="display:flex;gap:var(--aw-space-3);margin-top:var(--aw-space-6);">
+      <button class="btn btn-primary">▶ Start slideshow</button>
+      <button class="btn btn-ghost">⏸ Pause</button>
+      <button class="btn btn-ghost">⏹ Stop</button>
+      <button class="btn btn-ghost">Preview</button>
+    </div>
+  </div>`,
+  videos: `<div class="main-header"><div><h1>Videos</h1><span style="font-size:var(--aw-text-sm);color:var(--aw-text-muted);">12 items</span></div></div>
+  <div class="media-grid">
+    ${Array.from({length:6}).map((_,i)=>`
+      <div class="media-card"><div class="thumb" style="background:${['#2a1a4a','#1a4a2a','#4a2a1a','#1a2a4a','#4a2a3a','#2a3a1a'][i]};></div><div class="meta"><div class="title">${['Nebula Drift','Autumn Leaves','City Rooftops','Abstract Waves','Anime Scene 1','Anime Scene 2'][i]}</div><div class="sub">2:14 · 1920×1080 · MP4 · H.264</div></div></div>`).join('')}
+  </div>`,
+  'web-editor': `<div class="main-header"><div><h1>Web Wallpaper</h1><span style="font-size:var(--aw-text-sm);color:var(--aw-text-muted);">editor · preview · console</span></div></div>
+  <div class="editor-grid">
+    <div class="editor-panel">
+      <div class="editor-panel-title">📁 Package: nebula-awall</div>
+      <div class="editor-panel-body" style="font-size:var(--aw-text-xs);">
+        <ul><li>📄 wallpaper.json <span style="color:var(--aw-text-muted);">— manifest</span></li><li>📄 preview.png</li><li>📄 thumbnail.webp</li><li>📁 assets/</li><li>📄 content/index.html</li><li>📄 content/style.css</li><li>📄 content/script.js</li><li>📄 content/scene.glb</li></ul>
+        <div style="margin-top:var(--aw-space-3);display:flex;gap:var(--aw-space-2);">
+          <button class="btn btn-ghost btn-sm">➕ New file</button>
+          <button class="btn btn-ghost btn-sm">📁 New folder</button>
+        </div>
+      </div>
+    </div>
+    <div class="editor-panel">
+      <div class="editor-panel-title">✏️ index.html</div>
+      <div class="editor-panel-body"><textarea readonly style="font-size:var(--aw-text-xs);">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;&lt;title&gt;Nebula Drift&lt;/title&gt;
+&lt;link rel="stylesheet" href="style.css"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;canvas id="canvas"&gt;&lt;/canvas&gt;
+  &lt;script src="script.js"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</textarea></div>
+    </div>
+    <div class="editor-panel">
+      <div class="editor-panel-title">🎨 live preview</div>
+      <div class="editor-preview">
+        <div class="demo">
+          <div class="mock">
+            <h3>Nebula Drift</h3>
+            <p>A slowly animated nebula scene.</p>
+            <div style="display:flex;gap:var(--aw-space-2);margin-top:var(--aw-space-3);">
+              <button class="btn btn-ghost btn-sm">▲</button>
+              <button class="btn btn-ghost btn-sm">▼</button>
+              <button class="btn btn-ghost btn-sm">◀</button>
+              <button class="btn btn-ghost btn-sm">▶</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="display:flex;gap:var(--aw-space-4);margin-top:var(--aw-space-3);flex-wrap:wrap;">
+    <div style="flex:1;min-width:200px;background:var(--aw-surface-2);border:1px solid var(--aw-border);border-radius:var(--aw-radius-md);padding:var(--aw-space-3);">
+      <div style="font-size:var(--aw-text-xs);color:var(--aw-text-muted);margin-bottom:var(--aw-space-2);">Developer console</div>
+      <div style="font-size:var(--aw-text-xs);color:var(--aw-text-muted);">● 2 messages logged</div>
+    </div>
+    <div style="flex:1;min-width:200px;background:var(--aw-surface-2);border:1px solid var(--aw-border);border-radius:var(--aw-radius-md);padding:var(--aw-space-3);">
+      <div style="font-size:var(--aw-text-xs);color:var(--aw-text-muted);margin-bottom:var(--aw-space-2);">Permissions</div>
+      <div style="display:flex;gap:var(--aw-space-2);flex-wrap:wrap;">
+        <span style="background:var(--aw-surface-3);padding:var(--aw-space-1) var(--aw-space-2);border-radius:var(--aw-radius-sm);">🌐 network: off</span>
+        <span style="background:var(--aw-surface-3);padding:var(--aw-space-1) var(--aw-space-2);border-radius:var(--aw-radius-sm);">🔊 audio: off</span>
+        <span style="background:var(--aw-surface-3);padding:var(--aw-space-1) var(--aw-space-2);border-radius:var(--aw-radius-sm);">🖱️ mouse: on</span>
+      </div>
+    </div>
+    <div style="flex:1;min-width:200px;background:var(--aw-surface-2);border:1px solid var(--aw-border);border-radius:var(--aw-radius-md);padding:var(--aw-space-3);">
+      <div style="font-size:var(--aw-text-xs);color:var(--aw-text-muted);margin-bottom:var(--aw-space-2);">Resource limits</div>
+      <div style="font-size:var(--aw-text-xs);color:var(--aw-text-secondary);">30 FPS · 512 MB · 20% CPU</div>
+    </div>
+    <div style="flex:1;min-width:200px;background:var(--aw-surface-2);border:1px solid var(--aw-border);border-radius:var(--aw-radius-md);padding:var(--aw-space-3);">
+      <div style="font-size:var(--aw-text-xs);color:var(--aw-text-muted);margin-bottom:var(--aw-space-2);">Validation</div>
+      <div style="font-size:var(--aw-text-xs);color:var(--aw-success);">✓ Valid manifest</div>
+    </div>
+  </div>`,
+  '3d-editor': `<div class="main-header"><div><h1>3D Wallpaper</h1><span style="font-size:var(--aw-text-sm);color:var(--aw-text-muted);">scene · viewport · hierarchy · properties</span></div></div>
+  <div class="three-editor">
+    <div class="panel">
+      <div class="panel-title">🗂️ Scene library</div>
+      <div class="panel-body">
+        <h4 style="margin-bottom:var(--aw-space-2);">Scenes</h4>
+        <ul><li>📁 Nebula Drift <span style="color:var(--aw-text-muted);font-size:var(--aw-text-xs);">scene.glb · 2.1 MB</span></li><li>📁 Galaxy Field <span style="color:var(--aw-text-muted);font-size:var(--aw-text-xs);">scene.glb · 3.4 MB</span></li><li>📁 Aurora Borealis <span style="color:var(--aw-text-muted);font-size:var(--aw-text-xs);">scene.glb · 1.8 MB</span></li></ul>
+        <div style="margin-top:var(--aw-space-3);"><button class="btn btn-ghost btn-sm">📁 Import .glb</button></div>
+      </div>
+    </div>
+    <div class="viewport" id="viewport">
+      <div style="color:var(--aw-text-secondary);font-size:var(--aw-text-sm);">3D viewport — drag to orbit, scroll to zoom</div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">📦 Hierarchy</div>
+      <div class="panel-body">
+        <h4 style="margin-bottom:var(--aw-space-2);">Scene graph</h4>
+        <ul><li>📁 Nebula Drift</li><li>  📦 Mesh A — sphere <span style="color:var(--aw-text-muted);font-size:var(--aw-text-xs);">transform: 1,0,0 · scale: 1.2</span></li><li>  📦 Mesh B — torus <span style="color:var(--aw-text-muted);font-size:var(--aw-text-xs);">transform: 2,1,0 · scale: 0.8</span></li><li>  📦 Mesh C — torus knot <span style="color:var(--aw-text-muted);font-size:var(--aw-text-xs);">transform: -1,2,0 · scale: 1.0</span></li></ul>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">⚙️ Properties</div>
+      <div class="panel-body">
+        <div style="display:flex;flex-direction:column;gap:var(--aw-space-3);">
+          <div><label>Camera: orbit · 45° pitch · 60° yaw</label></div>
+          <div><label>Render quality: High</label></div>
+          <div><label style="display:flex;justify-content:space-between;">Shadows<span style="color:var(--aw-text-secondary);">On</span></label></div>
+          <div><label style="display:flex;justify-content:space-between;">MSAA 4×<span style="color:var(--aw-text-secondary);">On</span></label></div>
+          <div><label>Refresh rate: 60 Hz</label></div>
+          <div style="display:flex;gap:var(--aw-space-2);margin-top:var(--aw-space-3);">
+            <button class="btn btn-ghost btn-sm">⏸ Pause</button>
+            <button class="btn btn-primary btn-sm">▶ Play</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`,
+  'games-launcher': `<div class="main-header"><div><h1>Wallpaper Games</h1><span style="font-size:var(--aw-text-sm);color:var(--aw-text-muted);">9 items</span></div></div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:var(--aw-space-4);margin-top:var(--aw-space-6);">
+    ${Array.from({length:6}).map((_,i)=>`
+      <div class="game-card"><div class="thumb" style="background:${['#2a1a4a','#1a4a2a','#4a2a1a','#1a2a4a','#4a2a3a','#2a3a1a'][i]};"></div><div class="info"><div class="title">Astro Miner</div><div class="desc">Mine asteroids in deep space.</div><div class="meta">🎮 Click & Key · 🖼️ 640×360</div></div></div>`).join('')}
+    <div class="media-card" style="grid-column:span 2;">
+      <div class="thumb" style="background:#1a2a4a;"></div>
+      <div class="info"><div class="title">Stardust Runner</div><div class="desc">A scrolling arcade game. Avoid obstacles and collect stars.</div><div class="meta">🎮 Full input · 🖼️ 1280×720</div></div>
+    </div>
+  </div>`,
+};
+
+function renderScreen(name) {
+  const main = document.getElementById('main');
+  const navItems = document.querySelectorAll('.nav-item');
+  const content = screens[name] || screens.home;
+  main.innerHTML = content;
+  navItems.forEach(item => {
+    item.classList.toggle('active', item.dataset.screen === name);
+  });
+}
+
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.addEventListener('click', () => {
+    const screen = item.dataset.screen;
+    renderScreen(screen);
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+[workspace]
+name = "aetherwall"
+version = "0.1.0"
+authors = ["AetherWall Contributors"]
+edition = "2021"
+description = "AetherWall — a Linux-native wallpaper platform for KDE Plasma 6"
+license = "MIT"
+
+[workspace.package]
+version = "0.1.0"
+
+# NOTE: This workspace is a scaffold for Phase 1 implementation.
+# Phase 0 (this repository) contains only documentation, design, and prototypes.
+# Cargo crates under crates/ are created and implemented in Phase 1.
