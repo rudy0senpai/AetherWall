@@ -1,0 +1,25 @@
+[package]
+name = "aetherwall-daemon"
+version = "0.1.0"
+authors = ["AetherWall Contributors"]
+edition = "2021"
+description = "AetherWall daemon — background service and wallpapers manager"
+license = "MIT"
+
+[lints]
+workspace = true
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+anyhow = { workspace = true }
+tokio = { workspace = true }
+async-trait = { workspace = true }
+chrono = { workspace = true }
+uuid = { workspace = true }
+rusqlite = { workspace = true }
+walkdir = { workspace = true }
+tempfile = { workspace = true }
+toml = "0.8"
+aetherwall-core = { path = "../aetherwall-core" }

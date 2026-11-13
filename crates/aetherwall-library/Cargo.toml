@@ -1,0 +1,29 @@
+[package]
+name = "aetherwall-library"
+version = "0.1.0"
+authors = ["AetherWall Contributors"]
+edition = "2021"
+description = "AetherWall aetherwall-library — a Linux-native wallpaper platform for KDE Plasma 6"
+license = "MIT"
+
+[lints]
+workspace = true
+
+[dependencies]
+# Core libraries
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+anyhow = { workspace = true }
+
+# Async
+tokio = { workspace = true }
+async-trait = { workspace = true }
+
+# Time and UUID
+chrono = { workspace = true }
+uuid = { workspace = true }
+
+# SQLite
+rusqlite = { workspace = true }
+walkdir = { workspace = true }

@@ -1,0 +1,12 @@
+[package]
+name = "aetherwall-tests"
+version = "0.1.0"
+authors = ["AetherWall Contributors"]
+edition = "2021"
+description = "AetherWall test suite"
+license = "MIT"
+
+[dev-dependencies]
+tempfile = { workspace = true }
+assert_cmd = "2"
+predicates = "3"

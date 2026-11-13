@@ -1,0 +1,135 @@
+/* =========================================================================
+   AetherWall typography system (Phase 0 proposal)
+   ========================================================================= */
+
+:root {
+  /* --- Font families --- */
+  --aw-font-sans: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --aw-font-mono: "JetBrains Mono", "Fira Code", "Cascadia Code", monospace;
+
+  /* --- Type scale --- */
+  --aw-text-xs: 0.75rem;    /* 12px */
+  --aw-text-sm: 0.8125rem;  /* 13px */
+  --aw-text-base: 0.875rem; /* 14px */
+  --aw-text-lg: 1rem;       /* 16px */
+  --aw-text-xl: 1.125rem;   /* 18px */
+  --aw-text-2xl: 1.375rem;  /* 22px */
+  --aw-text-3xl: 1.625rem;  /* 26px */
+  --aw-text-4xl: 2.25rem;   /* 36px */
+
+  /* --- Line heights --- */
+  --aw-leading-tight: 1.1;
+  --aw-leading-normal: 1.4;
+  --aw-leading-relaxed: 1.6;
+
+  /* --- Letter spacing --- */
+  --aw-tracking-tight: -0.02em;
+  --aw-tracking-normal: 0;
+  --aw-tracking-wide: 0.04em;
+
+  /* --- Font weights --- */
+  --aw-font-normal: 400;
+  --aw-font-medium: 500;
+  --aw-font-semibold: 600;
+  --aw-font-bold: 700;
+
+  /* --- Text sizes per usage --- */
+  --aw-text-size-xs: var(--aw-text-xs);
+  --aw-text-size-sm: var(--aw-text-sm);
+  --aw-text-size-base: var(--aw-text-base);
+  --aw-text-size-lg: var(--aw-text-lg);
+  --aw-text-size-xl: var(--aw-text-xl);
+  --aw-text-size-2xl: var(--aw-text-2xl);
+  --aw-text-size-3xl: var(--aw-text-3xl);
+  --aw-text-size-4xl: var(--aw-text-4xl);
+
+  /* --- Text colors --- */
+  --aw-text-primary: #f5f3fa;
+  --aw-text-secondary: #aaa5b8;
+  --aw-text-muted: #7a728a;
+  --aw-text-inverse: #0b0b10;
+
+  /* --- Code / mono --- */
+  --aw-text-code: var(--aw-text-sm);
+  --aw-text-code-family: var(--aw-font-mono);
+  --aw-text-code-color: var(--aw-accent);
+}
+
+/* --- Base typography --- */
+body {
+  font-family: var(--aw-font-sans);
+  font-size: var(--aw-text-base);
+  line-height: var(--aw-leading-normal);
+  color: var(--aw-text-primary);
+  background-color: var(--aw-background);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* --- Headings --- */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--aw-font-sans);
+  font-weight: var(--aw-font-semibold);
+  line-height: var(--aw-leading-tight);
+  color: var(--aw-text-primary);
+  margin: 0;
+}
+
+h1 { font-size: var(--aw-text-4xl); letter-spacing: var(--aw-tracking-tight); }
+h2 { font-size: var(--aw-text-3xl); letter-spacing: var(--aw-tracking-tight); }
+h3 { font-size: var(--aw-text-2xl); letter-spacing: var(--aw-tracking-tight); }
+h4 { font-size: var(--aw-text-xl); letter-spacing: var(--aw-tracking-tight); }
+h5 { font-size: var(--aw-text-lg); letter-spacing: var(--aw-tracking-tight); }
+h6 { font-size: var(--aw-text-base); letter-spacing: var(--aw-tracking-tight); }
+
+/* --- Text variants --- */
+.text-xs   { font-size: var(--aw-text-xs); }
+.text-sm   { font-size: var(--aw-text-sm); }
+.text-base { font-size: var(--aw-text-base); }
+.text-lg   { font-size: var(--aw-text-lg); }
+.text-xl   { font-size: var(--aw-text-xl); }
+.text-2xl  { font-size: var(--aw-text-2xl); }
+.text-3xl  { font-size: var(--aw-text-3xl); }
+.text-4xl  { font-size: var(--aw-text-4xl); }
+
+.text-primary   { color: var(--aw-text-primary); }
+.text-secondary { color: var(--aw-text-secondary); }
+.text-muted     { color: var(--aw-text-muted); }
+.text-accent    { color: var(--aw-accent); }
+.text-primary-accent { color: var(--aw-primary); }
+.text-secondary-accent { color: var(--aw-secondary-accent); }
+.text-inverse   { color: var(--aw-text-inverse); }
+
+/* --- Code --- */
+code, .code {
+  font-family: var(--aw-font-mono);
+  font-size: var(--aw-text-code);
+  background: var(--aw-surface-3);
+  color: var(--aw-text-code-color);
+  padding: var(--aw-space-1) var(--aw-space-2);
+  border-radius: var(--aw-radius-sm);
+  border: 1px solid var(--aw-border);
+}
+
+/* --- Prose / paragraphs --- */
+p {
+  margin: 0 0 var(--aw-space-4) 0;
+  line-height: var(--aw-leading-relaxed);
+}
+
+/* --- Link --- */
+a {
+  color: var(--aw-primary);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--aw-transition-fast);
+}
+a:hover {
+  border-bottom-color: var(--aw-primary);
+}
+
+/* --- Selection --- */
+::selection {
+  background: var(--aw-primary-soft);
+  color: var(--aw-text-primary);
+}

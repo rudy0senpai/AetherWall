@@ -1,0 +1,42 @@
+# Auto detect text files for line ending normalization
+* text=auto
+
+# Explicitly mark files that should always use LF
+*.md text eol=lf
+*.css text eol=lf
+*.html text eol=lf
+*.js text eol=lf
+*.py text eol=lf
+*.json text eol=lf
+*.toml text eol=lf
+*.txt text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.eot binary
+*.otf binary
+*.ttf binary
+*.woff binary
+*.woff2 binary
+*.pdf binary
+*.wasm binary
+*.obj binary
+*.mtl binary
+
+# Visual Studio / JetBrains
+.vscode/*
+!/.vscode/settings.json
+.idea/*
+!/.idea/runConfigurations/
+*.iml
+
+# OS files
+.DS_Store
+Thumbs.db

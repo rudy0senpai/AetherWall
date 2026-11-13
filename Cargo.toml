@@ -1,0 +1,37 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/aetherwall-core",
+    "crates/aetherwall-daemon",
+    "crates/aetherwall-ipc",
+    "crates/aetherwall-library",
+    "crates/aetherwall-scheduler",
+    "crates/aetherwall-settings",
+    "crates/aetherwall-package",
+    "crates/aetherwall-provider-api",
+]
+
+[workspace.package]
+version = "0.1.0"
+authors = ["AetherWall Contributors"]
+edition = "2021"
+license = "MIT"
+
+[workspace.dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+rusqlite = { version = "0.32", features = ["bundled"] }
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "time"] }
+async-trait = "0.1"
+dbus = "0.9"
+tempfile = "3"
+thiserror = "1"
+chrono = { version = "0.4", features = ["serde"] }
+uuid = { version = "1", features = ["v4", "serde"] }
+anyhow = "1"
+walkdir = "2"
+
+[workspace.lints.clippy]
+all = "warn"
+nursery = "warn"
+perf = "warn"

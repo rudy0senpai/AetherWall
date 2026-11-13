@@ -1,0 +1,58 @@
+/* =========================================================================
+   AetherWall spacing system (Phase 0 proposal)
+   8px grid-based spacing scale.
+   ========================================================================= */
+
+:root {
+  /* --- Spacing scale (padding/margin) --- */
+  --aw-space-1: 4px;   /* 0.25rem */
+  --aw-space-2: 8px;   /* 0.5rem  */
+  --aw-space-3: 12px;  /* 0.75rem */
+  --aw-space-4: 16px;  /* 1rem   */
+  --aw-space-5: 20px;  /* 1.25rem */
+  --aw-space-6: 24px;  /* 1.5rem */
+  --aw-space-8: 32px;  /* 2rem   */
+  --aw-space-10: 40px; /* 2.5rem */
+  --aw-space-12: 48px; /* 3rem   */
+  --aw-space-16: 64px; /* 4rem   */
+  --aw-space-20: 80px; /* 5rem   */
+  --aw-space-24: 96px; /* 6rem   */
+
+  /* --- Container widths --- */
+  --aw-container-sm: 100%;
+  --aw-container-md: 1100px;
+  --aw-container-lg: 1280px;
+  --aw-container-xl: 1440px;
+
+  /* --- Layout paddings --- */
+  --aw-layout-padding-sm: var(--aw-space-4);
+  --aw-layout-padding-md: var(--aw-space-6);
+  --aw-layout-padding-lg: var(--aw-space-8);
+
+  /* --- Component gaps --- */
+  --aw-gap-sm: var(--aw-space-2);
+  --aw-gap-md: var(--aw-space-4);
+  --aw-gap-lg: var(--aw-space-6);
+}
+
+/* --- Reusable spacing utilities --- */
+.mx-auto { margin-left: auto; margin-right: auto; }
+.ml-auto { margin-left: auto; }
+.mr-auto { margin-right: auto; }
+
+.p-sm { padding: var(--aw-layout-padding-sm); }
+.p-md { padding: var(--aw-layout-padding-md); }
+.p-lg { padding: var(--aw-layout-padding-lg); }
+
+.m-0 { margin: 0; }
+.mt-4 { margin-top: var(--aw-space-4); }
+.mt-6 { margin-top: var(--aw-space-6); }
+.mb-4 { margin-bottom: var(--aw-space-4); }
+.mb-6 { margin-bottom: var(--aw-space-6); }
+
+/* --- Box sizing --- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
