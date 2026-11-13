@@ -10,7 +10,7 @@ impl LibraryValidator {
         if path.contains("..") {
             return Err("path traversal detected".to_string());
         }
-        if path.starts_with('/') || path.contains('\') {
+        if path.starts_with('/') || path.contains('\\') {
             return Err("absolute or drive-prefixed path not allowed".to_string());
         }
         Ok(())

@@ -2,7 +2,7 @@
 //!
 //! D-Bus service implementation for the daemon. Provides the signal and
 //! method dispatch logic for the `org.aetherwall.daemon.1` interface.
-pub use dbus_interface::*;
+pub use crate::dbus_interface::*;
 
 use serde::{Deserialize, Serialize};
 

@@ -85,6 +85,8 @@ impl Session {
 pub fn validate_transition(from: SessionState, to: SessionState) -> Result<(), String> {
     use SessionState::*;
     use crate::AetherWallError;
+use crate::session::State as SessionState;
+
 
     let allowed = match from {
         Created => matches!(to, Preparing | Stopped),

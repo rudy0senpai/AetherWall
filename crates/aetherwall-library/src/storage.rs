@@ -102,7 +102,7 @@ impl LibraryStorage {
                 &w.mime_type,
                 &w.author,
                 &w.license_id,
-                &w.is_favorite as i32,
+                i32::from(w.is_favorite),
                 &w.display_id,
                 &w.last_used_at,
             ),
@@ -151,7 +151,7 @@ impl LibraryStorage {
                          FROM wallpapers";
         let mut args = Vec::new();
         if let Some(t) = wallpaper_type {
-            query.push_str(" WHERE wallpaper_type = ?1");
+            query = query + " WHERE wallpaper_type = ?1";
             args.push(t.to_string());
         }
         let mut stmt = self.conn.prepare(query)?;
@@ -192,7 +192,7 @@ impl LibraryStorage {
                VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)"#,
             (
                 &d.id, &d.backend_key, &d.name, &d.width, &d.height, &d.scale_factor,
-                &d.refresh_rate_mhz, &d.is_primary as i32, &d.position_x, &d.position_y,
+                &d.refresh_rate_mhz, i32::from(d.is_primary), &d.position_x, &d.position_y,
             ),
         )?;
         Ok(())

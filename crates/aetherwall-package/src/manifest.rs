@@ -23,6 +23,7 @@ pub struct RuntimeInfo {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct Capabilities {
     pub network: bool,
     pub audio: bool,
@@ -32,6 +33,7 @@ pub struct Capabilities {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct Resources {
     pub max_fps: u32,
     pub memory_limit_mb: u32,

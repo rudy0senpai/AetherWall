@@ -12,7 +12,7 @@ pub enum IpcError {
     #[error("service unavailable")]
     ServiceUnavailable,
 
-    #[error("timeout after {{0:?}")]
+    #[error("timeout after {{0:?}}")]
     Timeout(std::time::Duration),
 
     #[error("version mismatch: expected {expected}, got {actual}")]

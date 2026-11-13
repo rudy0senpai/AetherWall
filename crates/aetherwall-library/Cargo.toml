@@ -6,6 +6,9 @@ edition = "2021"
 description = "AetherWall aetherwall-library — a Linux-native wallpaper platform for KDE Plasma 6"
 license = "MIT"
 
+[lints]
+workspace = true
+
 [dependencies]
 # Core libraries
 serde = { workspace = true }

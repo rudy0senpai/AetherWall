@@ -6,6 +6,9 @@ edition = "2021"
 description = "AetherWall daemon — background service and wallpapers manager"
 license = "MIT"
 
+[lints]
+workspace = true
+
 [dependencies]
 serde = { workspace = true }
 serde_json = { workspace = true }

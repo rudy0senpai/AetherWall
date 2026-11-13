@@ -6,6 +6,9 @@ edition = "2021"
 description = "AetherWall IPC crate — D-Bus interface between Studio and daemon"
 license = "MIT"
 
+[lints]
+workspace = true
+
 [dependencies]
 serde = { workspace = true }
 serde_json = { workspace = true }

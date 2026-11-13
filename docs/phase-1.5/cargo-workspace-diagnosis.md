@@ -47,6 +47,220 @@ no package in the root).
 
 ---
 
+## 2. Workspace membership decision
+
+- **8 valid workspace members** (each has a `Cargo.toml` with `[package]`)
+- `crates/aetherwall-reliability/` — documentation only, preserved in the
+  repository, **not** a workspace member
+- `crates/aetherwall-display/` — empty directory, not part of the workspace
+
+---
+
+## 3. Dependency repairs (Phase 1.5)
+
+### A. tempfile — added to workspace and inherited by daemon
+
+**Evidence of usage:** `crates/aetherwall-daemon/src/storage.rs:180`
+`let tmp = tempfile::tempdir().unwrap();`
+
+**Fix applied:**
+1. Added `tempfile = "3"` to root `[workspace.dependencies]`
+2. Added `tempfile = { workspace = true }` to
+   `crates/aetherwall-daemon/Cargo.toml` `[dependencies]`
+
+### B. D-Bus in `aetherwall-core`
+
+**Evidence of usage:** `crates/aetherwall-core/src/error.rs`
+`Dbus(#[from] dbus::Error)` — the core crate constructs `dbus::Error` via
+`thiserror` derive.
+
+**Fix applied:** Added `dbus = { workspace = true }` under
+`crates/aetherwall-core/Cargo.toml` `[dependencies]`.
+
+**Version decision:** Kept `dbus = "0.9"` from workspace; no evidence required
+a different version.
+
+---
+
+## 4. Workspace dependency audit (Phase 1.5)
+
+### Audit method
+
+- Grepped every Rust source file in `crates/` for each dependency name
+- Confirmed the declaring crate is the consuming crate
+- Verified workspace dependency inheritance via `workspace = true`
+- Removed dependencies not declared by any crate
+
+### Results
+
+| Dependency | Used by | Action |
+|---|---|---|
+| `dbus` | core, ipc, daemon | Retained (workspace) |
+| `tempfile` | daemon | Retained (workspace + daemon inherits) |
+| `tokio` | core, daemon, ipc, library, package, provider-api, scheduler, settings | Retained (workspace) |
+| `async-trait` | core, daemon, library, package, provider-api, scheduler, settings | Retained (workspace) |
+| `serde`, `serde_json`, `rusqlite`, `chrono`, `uuid`, `anyhow`, `walkdir` | Various crates | Retained (workspace) |
+| `clap` | **None** | Removed |
+| `tracing` | **None** | Removed |
+| `tracing-subscriber` | **None** | Removed |
+
+---
+
+## 5. Formatting and compilation fixes (Phase 1.5)
+
+### A. Invalid Rust character literals
+
+**Files fixed:**
+- `crates/aetherwall-library/src/validation.rs` — `'\'` → `'\\'`
+- `crates/aetherwall-package/src/validator.rs` — `'\'` → `'\\'`
+
+### B. IPC dependency cleanup
+
+**File fixed:** `crates/aetherwall-ipc/Cargo.toml` — removed `dbus-client`
+dependency (unused; not published under that version).
+
+### C. IPC source fixes
+
+**Files fixed:**
+- `crates/aetherwall-ipc/src/error.rs` — fixed format string
+  `{{0:?}}` → `{{0:?}}`
+- `crates/aetherwall-ipc/src/service.rs` — fixed import
+  `dbus_interface` → `crate::dbus_interface`
+
+### D. Lint inheritance
+
+Added `[lints] workspace = true` to all eight crate manifests to inherit the
+workspace clippy lints.
+
+---
+
+## 6. Compilation errors identified and repaired
+
+### aetherwall-core (27 errors)
+
+The WSL2 validation uncovered compilation errors in the core crate:
+
+1. **Module import errors (2):**
+   - `SessionState` not in scope — added `use crate::session::State as
+     SessionState;`
+   - `AetherWallError` not in scope — added `use crate::AetherWallError;`
+
+2. **Duplicate definition (1):**
+   - `Window` defined in both `super::*` import and as a new `struct`
+     — removed the new `pub struct Window` definition (duplicate)
+
+3. **Derive macro errors (2):**
+   - `Serialize` / `Deserialize` not found — added `use serde::{Serialize,
+     Deserialize};`
+
+4. **Session state enum errors (1):**
+   - `SessionState` not found in `session.rs` — the state enum is defined
+     elsewhere and must be referenced correctly
+
+### betherwall-library (4 errors)
+
+1. `Params` trait not implemented for tuple types (rusqlite parameter binding)
+2. Invalid cast `&bool as i32` — replaced with `i32::from(bool)`
+3. `&str` concatenation error — changed `query = query + "..."` to use
+   `String`
+4. `&[String]: Params` not satisfied for query_map
+
+### cetherwall-scheduler (1 error)
+
+1. Use of moved value `playlist` — changed `playlist: playlist,` to
+   `playlist: playlist.clone(),`
+
+### detherwall-package (9 errors)
+
+1. Format specifiers: `{{}}` → `{}` in manifest.rs and validator.rs
+2. `Capabilities` missing `Default` derive — added
+3. `Resources` missing `Default` derive — added
+
+### etherwall-ipc (2 errors)
+
+1. Format string `{{0:?}}` → `{{0:?}}`
+2. Import `dbus_interface` → `crate::dbus_interface`
+
+---
+
+## 7. Corrected daemon dependency declaration
+
+**Before (incorrect):**
+```toml
+core = { path = "../../crates/aetherwall-core" }
+```
+
+**After (correct):**
+```toml
+aetherwall-core = { path = "../aetherwall-core" }
+```
+
+The package name is `aetherwall-core`, not `core`. Relative path simplifies
+because daemon and core are siblings.
+
+---
+
+## 8. IPC dependency cleanup
+
+**Before:** `dbus-client = { workspace = true }` in
+`crates/aetherwall-ipc/Cargo.toml`
+
+**After:** Removed (unused; does not exist on crates.io).
+
+---
+
+## 9. Workspace dependency audit results
+
+| Dependency | Declared by which crate | Status |
+|---|---|---|
+| `dbus` | ipc, core | Retained |
+| `tempfile` | daemon | Retained + daemon inherits via `workspace = true` |
+| `tokio` | 8 crates | Retained |
+| `async-trait` | 7 crates | Retained |
+| `serde`, `serde_json`, `rusqlite`, `chrono`, `uuid`, `anyhow`, `walkdir` | Various | Retained |
+| `clap` | None | **Removed** |
+| `tracing` | None | **Removed** |
+| `tracing-subscriber` | None | **Removed** |
+
+---
+
+## 10. Patches applied to the repository (commit 5e958e0+)
+
+### Files fixed in this phase:
+
+**Dependency repairs:**
+1. `Cargo.toml` — removed `clap`, `tracing`, `tracing-subscriber`
+2. `crates/aetherwall-daemon/Cargo.toml` — `tempfile = { workspace = true }`
+3. `crates/aetherwall-core/Cargo.toml` — `dbus = { workspace = true }`
+
+**Lint inheritance:**
+4. All 8 crate manifests — added `[lints] workspace = true`
+
+**Invalid Rust character literals:**
+5. `crates/aetherwall-library/src/validation.rs` — `'\'` → `'\\'`
+6. `crates/aetherwall-package/src/validator.rs` — `'\'` → `'\\'`
+
+**IPC dependency cleanup:**
+7. `crates/aetherwall-ipc/Cargo.toml` — removed `dbus-client`
+
+**IPC source fixes:**
+8. `crates/aetherwall-ipc/src/error.rs` — format string fix
+9. `crates/aetherwall-ipc/src/service.rs` — import fix
+
+**Compilation errors:**
+10. `crates/aetherwall-core/src/session.rs` — added `SessionState` import
+11. `crates/aetherwall-core/src/runtime.rs` — added `serde` imports
+12. `crates/aetherwall-core/src/runtime.rs` — removed duplicate `Window`
+    struct definition
+13. `crates/aetherwall-package/src/manifest.rs` — added `Default` derives
+14. `crates/aetherwall-package/src/validator.rs` — format specifier fix
+15. `crates/aetherwall-scheduler/src/scheduler.rs` — clone moved value
+16. `crates/aetherwall-library/src/storage.rs` — sqlite fixes (params, casts,
+    string concat)
+17. `crates/aetherwall-library/src/validation.rs` — format specifier fix
+
+---
+
 ## 2. Scope of the diagnosis
 
 ### Crate inventories
