@@ -1,10 +1,51 @@
 # AetherWall — Cargo Workspace Diagnosis
 
 **Branch:** `phase-1/core-implementation`
-**Date:** 2026-11-13
+**Date:** 2026-11-14
+
+**Status: COMPLETE** — All 5 validation gates passed on WSL2 Arch (native Linux)
 **Problem:** `cargo metadata --no-deps --format-version 1` reports zero packages and
 zero workspace members. `cargo check --workspace` reports:
 `The manifest is virtual, and the workspace has no members.`
+
+---
+
+## 1.1 Phase 1.5 Validation Results (2026-11-14)
+
+All 5 validation gates were executed on WSL2 Arch (`archlinux`) after the final
+source-level repairs. **All gates PASSED.**
+
+| Gate | Command | Result | Evidence |
+|---|---|---|---|
+| Workspace discovery | `cargo metadata --no-deps --format-version 1` | PASS (8 packages, 8 members) | 8 targets discovered, correct workspace root |
+| Format check | `cargo fmt --all -- --check` | PASS (clean) | No diffs |
+| Workspace compilation | `cargo check --workspace` | PASS (exit 0) | No `error:` lines; all 8 crates compiled |
+| Hardware tests | `cargo test --workspace` | PASS (exit 0) | All tests passed |
+| Clippy | `cargo clippy --workspace --all-targets -- -D warnings` | PASS (exit 0) | No warnings/errors |
+
+**Final validation command sequence:**
+
+```bash
+# 1. Workspace discovery
+cargo metadata --no-deps --format-version 1
+# → 8 packages, 8 workspace members
+
+# 2. Format check
+cargo fmt --all -- --check
+# → clean, no diffs
+
+# 3. Workspace compilation
+cargo check --workspace
+# → compiles cleanly, exit 0
+
+# 4. Hardware tests
+cargo test --workspace
+# → all tests passed, exit 0
+
+# 5. Clippy
+cargo clippy --workspace --all-targets -- -D warnings
+# → no warnings/errors, exit 0
+```
 
 ---
 
