@@ -20,7 +20,7 @@ pub enum DaemonEvent {
     ImportFailed { path: String, error: String },
     SessionStateChanged {
         session_id: String,
-        state: crate::session::SessionState,
+        state: core::session::SessionState,
     },
     DisplayTopologyChanged,
     ProviderProgress {

@@ -69,20 +69,7 @@ pub enum HealthStatus {
 
 /// Current state of a wallpaper session.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
-pub enum SessionState {
-    /// Runtime not started.
-    Created,
-    /// Runtime preparing (loading assets, creating view).
-    Preparing,
-    /// Runtime running.
-    Running,
-    /// Runtime paused.
-    Paused,
-    /// Runtime stopped.
-    Stopped,
-    /// Runtime failed (runtime marked session failed).
-    Failed,
-}
+
 
 /// Window configuration for a wallpaper.
 #[derive(Debug, Clone, Serialize, Deserialize)]

@@ -1,0 +1,16 @@
+[package]
+name = "aetherwall-runtime-slideshow"
+version = "0.1.0"
+authors = ["AetherWall Contributors"]
+edition = "2021"
+description = "AetherWall slideshow runtime — image slideshows with scheduling"
+license = "MIT"
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+anyhow = { workspace = true }
+tokio = { workspace = true }
+async-trait = { workspace = true }
+core = { path = "../../crates/aetherwall-core" }

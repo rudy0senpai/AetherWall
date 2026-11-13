@@ -4,9 +4,7 @@
 
 use core::display::Display;
 use core::models::{Wallpaper, WallpaperType, Window};
-use core::runtime::{
-    HealthStatus, SessionState, WallpaperRuntime,
-};
+use core::runtime::{HealthStatus, WallpaperRuntime};
 use core::session::SessionState as SessionState_;
 use std::time::Duration;
 use tokio::time;

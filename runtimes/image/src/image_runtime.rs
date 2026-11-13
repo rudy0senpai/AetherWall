@@ -4,8 +4,6 @@
 
 use std::path::Path;
 
-use crate::ImageRuntime;
-
 use core::display::Display;
 use core::models::{Wallpaper, WallpaperType, Window};
 use core::runtime::{HealthStatus, WallpaperRuntime};

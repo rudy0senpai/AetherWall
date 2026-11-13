@@ -5,7 +5,7 @@
 use std::collections::HashMap;
 
 use super::storage::Storage;
-use crate::session::Session;
+use core::session::Session;
 
 pub struct SessionManager {
     storage: Storage,
@@ -26,7 +26,7 @@ impl SessionManager {
         display: crate::display::Display,
         runtime_type: &str,
     ) -> Session {
-        let session = crate::session::Session::new(wallpaper, display, runtime_type);
+        let session = core::session::Session::new(wallpaper, display, runtime_type);
         self.sessions.insert(session.id.clone(), session.clone());
         self.storage.save_session(&session).ok();
         session
@@ -43,7 +43,7 @@ impl SessionManager {
     pub fn list_active(&self) -> Vec<&Session> {
         self.sessions
             .values()
-            .filter(|s| s.state == crate::session::SessionState::Running)
+            .filter(|s| s.state == core::session::SessionState::Running)
             .collect()
     }
 
@@ -85,7 +85,7 @@ mod tests {
             crate::display::Display::test("d1", 1920, 1080),
             "image",
         );
-        assert_eq!(session.state, crate::session::SessionState::Created);
+        assert_eq!(session.state, core::session::SessionState::Created);
         assert!(mgr.get("uuid-1").is_some());
         mgr.remove("uuid-1");
         assert!(mgr.get("uuid-1").is_none());

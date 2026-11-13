@@ -5,7 +5,7 @@
 use std::path::Path;
 
 use super::error::DaemonError;
-use crate::session::Session;
+use core::session::Session;
 
 pub struct Storage {
     pub conn: rusqlite::Connection,
@@ -90,12 +90,12 @@ impl Storage {
                 &session.display.id,
                 &session.runtime_type,
                 &match session.state {
-                    crate::session::SessionState::Created => "created",
-                    crate::session::SessionState::Preparing => "preparing",
-                    crate::session::SessionState::Running => "running",
-                    crate::session::SessionState::Paused => "paused",
-                    crate::session::SessionState::Stopped => "stopped",
-                    crate::session::SessionState::Failed => "failed",
+                    core::session::SessionState::Created => "created",
+                    core::session::SessionState::Preparing => "preparing",
+                    core::session::SessionState::Running => "running",
+                    core::session::SessionState::Paused => "paused",
+                    core::session::SessionState::Stopped => "stopped",
+                    core::session::SessionState::Failed => "failed",
                 },
                 &session.runtime_session_id,
                 &session.last_error_code,
@@ -180,7 +180,7 @@ mod tests {
         let tmp = tempfile::tempdir().unwrap();
         let path = tmp.path().join("test.db");
         let storage = Storage::open(&path).unwrap();
-        let session = crate::session::Session::new(
+        let session = core::session::Session::new(
             crate::models::Wallpaper {
                 id: "test-uuid".to_string(),
                 wallpaper_type: crate::models::WallpaperType::Image,
