@@ -1,15 +1,5 @@
 [workspace]
-name = "aetherwall"
-version = "0.1.0"
-authors = ["AetherWall Contributors"]
-edition = "2021"
-description = "AetherWall — a Linux-native wallpaper platform for KDE Plasma 6"
-license = "MIT"
-
-[workspace.package]
-version = "0.1.0"
-
-# ── Workspace members ────────────────────────────────────────────────────────
+resolver = "2"
 members = [
     "crates/aetherwall-core",
     "crates/aetherwall-daemon",
@@ -19,10 +9,14 @@ members = [
     "crates/aetherwall-settings",
     "crates/aetherwall-package",
     "crates/aetherwall-provider-api",
-    "crates/aetherwall-reliability",
 ]
 
-# ── Workspace dependencies ──────────────────────────────────────────────────
+[workspace.package]
+version = "0.1.0"
+authors = ["AetherWall Contributors"]
+edition = "2021"
+license = "MIT"
+
 [workspace.dependencies]
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["fmt"] }
@@ -33,15 +27,12 @@ rusqlite = { version = "0.32", features = ["bundled"] }
 tokio = { version = "1", features = ["rt-multi-thread", "macros", "time"] }
 async-trait = "0.1"
 dbus = "0.9"
-dbus-client = "0.1"
 thiserror = "1"
 chrono = { version = "0.4", features = ["serde"] }
 uuid = { version = "1", features = ["v4", "serde"] }
 anyhow = "1"
 walkdir = "2"
-tempfile = "3"
 
-# ── Workspace lints ─────────────────────────────────────────────────────────
 [workspace.lints.clippy]
 all = "warn"
 nursery = "warn"

@@ -12,4 +12,4 @@ serde_json = { workspace = true }
 thiserror = { workspace = true }
 tokio = { workspace = true }
 dbus = { workspace = true }
-dbus-client = { workspace = true }
+# dbus-client = { workspace = true } (unused)
