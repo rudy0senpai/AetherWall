@@ -17,5 +17,6 @@ chrono = { workspace = true }
 uuid = { workspace = true }
 rusqlite = { workspace = true }
 walkdir = { workspace = true }
+tempfile = { workspace = true }
 toml = "0.8"
 aetherwall-core = { path = "../aetherwall-core" }

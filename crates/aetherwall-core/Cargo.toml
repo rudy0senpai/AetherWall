@@ -24,3 +24,6 @@ uuid = { workspace = true }
 # SQLite
 rusqlite = { workspace = true }
 walkdir = { workspace = true }
+
+# D-Bus IPC
+dbus = { workspace = true }

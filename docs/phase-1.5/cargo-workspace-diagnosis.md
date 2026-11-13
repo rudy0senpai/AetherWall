@@ -158,7 +158,34 @@ one source file (`storage.rs` line 180).
 
 **Status:** Taskable — retain `tempfile = "3"` in workspace dependencies.
 
----
+### Issue 9 — tempfile removed from workspace dependencies
+
+**Symptoms:** After the Phase 1 repair, `tempfile = "3"` was **not** in
+`[workspace.dependencies]`, but `crates/aetherwall-daemon/src/storage.rs:180`
+still uses `tempfile::tempdir()`.
+
+**Proof of usage:** `crates/aetherwall-daemon/src/storage.rs`
+`let tmp = tempfile::tempdir().unwrap();`
+
+**Fix applied:**
+1. Added `tempfile = "3"` to root `[workspace.dependencies]`
+2. Added `tempfile = { workspace = true }` to
+   `crates/aetherwall-daemon/Cargo.toml` `[dependencies]`
+
+### Issue 10 — Missing `dbus` dependency in `aetherwall-core`
+
+**Evidence of usage:** `crates/aetherwall-core/src/error.rs`
+`Dbus(#[from] dbus::Error)` — the core crate uses `dbus::Error` via
+`thiserror` derive.
+
+**Proof of missing dependency:** `crates/aetherwall-core/Cargo.toml` did not
+declare D-Bus anywhere.
+
+**Fix applied:** Added `dbus = { workspace = true }` under
+`crates/aetherwall-core/Cargo.toml` `[dependencies]`.
+
+**Version decision:** Kept `dbus = "0.9"` from workspace; no evidence required
+a different version.
 
 ## 4. Proposed minimal repair
 
@@ -272,3 +299,28 @@ git commit -m "fix(build): correct Cargo workspace configuration"
 
 Only the daemon manifest is staged with the root manifest. Source import fixes
 (tracked separately) are committed as `fix(core): rename crate imports in daemon`.
+
+## 8. Files changed (Phase 1.5)
+
+1. `Cargo.toml` — `tempfile = "3"` added to `[workspace.dependencies]`
+2. `crates/aetherwall-daemon/Cargo.toml` — `tempfile = { workspace = true }`
+   added to `[dependencies]`
+3. `crates/aetherwall-core/Cargo.toml` — `dbus = { workspace = true }`
+   added to `[dependencies]`
+
+## 9. New commit
+
+```bash
+git add Cargo.toml crates/aetherwall-core/Cargo.toml crates/aetherwall-daemon/Cargo.toml
+git commit -m "fix(build): add missing tempfile and dbus dependencies"
+```
+
+New commit: **`<hash>`**
+
+## 10. Distinct successful validation vs. untested
+
+- **PASS:** `cargo metadata`, `cargo fmt --check`, `cargo check --workspace`
+  (executed on WSL2 Arch, fresh checkout)
+- **BLOCKED:** `cargo test --workspace`, `cargo clippy --workspace --all-targets
+  -- -D warnings` (no Rust toolchain on MSYS host)
+- **BLOCKED:** Full Phase 1.5 validation, Plasma 6 integration (no CachyOS host)
